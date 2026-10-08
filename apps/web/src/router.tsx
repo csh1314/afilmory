@@ -6,16 +6,19 @@ import { NotFound } from './components/common/NotFound'
 import { AppSkeleton } from './components/ui/app-skeleton'
 import { routes } from './generated-routes'
 
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    children: routes,
-    errorElement: <ErrorElement />,
-    hydrateFallbackElement: <AppSkeleton />,
-  },
-  {
-    path: '*',
-    element: <NotFound />,
-  },
-])
+export const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <App />,
+      children: routes,
+      errorElement: <ErrorElement />,
+      hydrateFallbackElement: <AppSkeleton />,
+    },
+    {
+      path: '*',
+      element: <NotFound />,
+    },
+  ],
+  { basename: APP_BASE_PATH },
+)

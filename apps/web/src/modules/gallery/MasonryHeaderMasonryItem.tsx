@@ -10,7 +10,7 @@ import { ActionGroup } from './ActionGroup'
 
 function resolveSocialUrl(
   value: string,
-  { baseUrl, stripAt }: { baseUrl: string; stripAt?: boolean },
+  { baseUrl, stripAt }: { baseUrl: string, stripAt?: boolean },
 ): string | undefined {
   const trimmed = value.trim()
 
@@ -29,16 +29,16 @@ function resolveSocialUrl(
   return `${baseUrl}${normalized}`
 }
 
-export const MasonryHeaderMasonryItem = ({ style, className }: { style?: React.CSSProperties; className?: string }) => {
+export const MasonryHeaderMasonryItem = ({ style, className }: { style?: React.CSSProperties, className?: string }) => {
   const { t } = useTranslation()
   const { i18n } = useTranslation()
   const visiblePhotoCount = usePhotos().length
-  const githubUrl =
-    siteConfig.social && siteConfig.social.github
+  const githubUrl
+    = siteConfig.social && siteConfig.social.github
       ? resolveSocialUrl(siteConfig.social.github, { baseUrl: 'https://github.com/' })
       : undefined
-  const twitterUrl =
-    siteConfig.social && siteConfig.social.twitter
+  const twitterUrl
+    = siteConfig.social && siteConfig.social.twitter
       ? resolveSocialUrl(siteConfig.social.twitter, { baseUrl: 'https://twitter.com/', stripAt: true })
       : undefined
   const hasRss = true
@@ -103,7 +103,7 @@ export const MasonryHeaderMasonryItem = ({ style, className }: { style?: React.C
             )}
             {hasRss && (
               <a
-                href="/feed.xml"
+                href={`${APP_BASE_PATH}feed.xml`}
                 target="_blank"
                 className="text-text-secondary flex items-center justify-center p-2 duration-200 hover:text-[#ec672c]"
                 title="RSS"

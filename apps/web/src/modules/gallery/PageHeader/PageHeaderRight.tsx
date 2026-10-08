@@ -160,7 +160,7 @@ const MoreActionMenu = () => {
         )}
         {hasRss && (
           <DropdownMenuItem asChild>
-            <a href="/feed.xml" target="_blank" rel="noreferrer" className="flex items-center gap-2">
+            <a href={`${APP_BASE_PATH}feed.xml`} target="_blank" rel="noreferrer" className="flex items-center gap-2">
               <i className="i-mingcute-rss-2-fill text-base" />
               RSS
             </a>

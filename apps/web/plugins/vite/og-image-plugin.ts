@@ -41,11 +41,13 @@ export function ogImagePlugin(options: OGImagePluginOptions = {}): Plugin {
           photoCount: 4,
         })
         ogImagePath = `/${fileName}`
+        // eslint-disable-next-line no-console
         console.info(`🖼️  OG image generated: ${ogImagePath}`)
 
         // 清理旧的 OG 图片
         await cleanupOldOGImages(3)
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Failed to generate OG image:', error)
       }
     },
@@ -86,7 +88,6 @@ export function ogImagePlugin(options: OGImagePluginOptions = {}): Plugin {
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-            <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="shortcut icon" href="/favicon.ico" />
         `
 

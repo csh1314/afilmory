@@ -8,12 +8,12 @@ import { resolveSocialUrl, SocialIconButton } from './utils'
 export const PageHeaderLeft = () => {
   const visiblePhotoCount = usePhotos().length
 
-  const githubUrl =
-    siteConfig.social && siteConfig.social.github
+  const githubUrl
+    = siteConfig.social && siteConfig.social.github
       ? resolveSocialUrl(siteConfig.social.github, { baseUrl: 'https://github.com/' })
       : undefined
-  const twitterUrl =
-    siteConfig.social && siteConfig.social.twitter
+  const twitterUrl
+    = siteConfig.social && siteConfig.social.twitter
       ? resolveSocialUrl(siteConfig.social.twitter, { baseUrl: 'https://twitter.com/', stripAt: true })
       : undefined
   const hasRss = true
@@ -46,7 +46,7 @@ export const PageHeaderLeft = () => {
         <div className="ml-1 hidden items-center gap-1 border-l border-white/10 pl-2 lg:flex">
           {githubUrl && <SocialIconButton icon="i-mingcute-github-fill" title="GitHub" href={githubUrl} />}
           {twitterUrl && <SocialIconButton icon="i-mingcute-twitter-fill" title="Twitter" href={twitterUrl} />}
-          {hasRss && <SocialIconButton icon="i-mingcute-rss-2-fill" title="RSS" href="/feed.xml" />}
+          {hasRss && <SocialIconButton icon="i-mingcute-rss-2-fill" title="RSS" href={`${APP_BASE_PATH}feed.xml`} />}
         </div>
       )}
     </div>

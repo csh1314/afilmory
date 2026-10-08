@@ -1,0 +1,51 @@
+{
+  "name": "csh1314's Afilmory",
+  "title": "csh1314's Afilmory",
+  "description": "Capturing beautiful moments in life, documenting daily warmth and emotions through my lens.",
+  "url": "https://csh1314.github.io/afilmory",
+  "accentColor": "#007bff",
+  "viewer": {
+    "regions": {
+      "accentSource": "system",
+      "labelPlacement": "edge"
+    }
+  },
+  "author": {
+    "name": "csh1314",
+    "url": "https://github.com/csh1314",
+    "avatar": "https://github.com/csh1314.png"
+  },
+  "social": {
+    "github": "csh1314",
+    "twitter": ""
+  },
+  "feed": {
+    "folo": {
+      "challenge": {
+        "feedId": "",
+        "userId": ""
+      }
+    }
+  },
+  "map": [
+    "maplibre"
+  ],
+  "mapStyle": "builtin",
+  "mapProjection": "mercator",
+  "beian": {
+    "icp": {
+      "enabled": false,
+      "number": "XICP备xxxxxxxx号",
+      "link": "https://beian.miit.gov.cn/"
+    },
+    "police": {
+      "enabled": false,
+      "number": "X公网安备xxxxxxxxxxxxxx号",
+      "code": "xxxxxxxxxxxxxx",
+      "icon": "https://example.com/beian.png"
+    }
+  },
+  "telemetry": {
+    "vibeloft": true
+  }
+}

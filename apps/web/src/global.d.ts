@@ -18,6 +18,8 @@ declare global {
   } & {}
 
   const APP_NAME: string
+  /** 站点部署的子路径，以 / 开头和结尾，默认 '/' */
+  const APP_BASE_PATH: string
   const BUILT_DATE: string
   const GIT_COMMIT_HASH: string
 
@@ -47,8 +49,8 @@ declare global {
 
   export type ComponentType<P = object> = {
     className?: string
-  } & PropsWithChildren &
-    P
+  } & PropsWithChildren
+  & P
 }
 
 declare module 'react' {

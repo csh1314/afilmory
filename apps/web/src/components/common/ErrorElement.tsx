@@ -20,10 +20,12 @@ export function ErrorElement() {
 
   const reloadRef = useRef(false)
   if (
-    message.startsWith('Failed to fetch dynamically imported module') &&
-    window.sessionStorage.getItem('reload') !== '1'
+    message.startsWith('Failed to fetch dynamically imported module')
+    && window.sessionStorage.getItem('reload') !== '1'
   ) {
-    if (reloadRef.current) return null
+    if (reloadRef.current) {
+      return null
+    }
     window.sessionStorage.setItem('reload', '1')
     window.location.reload()
     reloadRef.current = true
@@ -72,7 +74,7 @@ export function ErrorElement() {
           {/* Action buttons */}
           <div className="mb-8 flex flex-col gap-3 sm:flex-row">
             <Button
-              onClick={() => (window.location.href = '/')}
+              onClick={() => (window.location.href = APP_BASE_PATH)}
               className="bg-material-opaque text-text-vibrant hover:bg-control-enabled/90 h-10 flex-1 border-0 font-medium transition-colors"
             >
               Reload Application

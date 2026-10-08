@@ -67,7 +67,7 @@ const ShareSheet: ModalComponent<ShareSheetProps> = ({ photo, blobSrc, dismiss }
 
   const resolvedBaseUrl = useMemo(() => {
     if (typeof window !== 'undefined' && window.location?.origin) {
-      return window.location.origin
+      return `${window.location.origin}${APP_BASE_PATH.replace(/\/$/, '')}`
     }
     return siteConfig.url?.replace(/\/$/, '') ?? ''
   }, [])

@@ -47,6 +47,8 @@ if (process.env.CI) {
   })
 }
 const DEV_NEXT_JS = process.env.DEV_NEXT_JS === 'true'
+// 部署到子路径（如 GitHub Pages 项目页 /afilmory/）时设置，必须以 / 开头和结尾
+const APP_BASE_PATH = process.env.APP_BASE_PATH || '/'
 
 const ReactCompilerConfig = {
   /* ... */
@@ -67,8 +69,8 @@ const staticWebBuildPlugins: PluginOption[] = [
   siteConfigInjectPlugin(),
   photosStaticPlugin(),
   VitePWA({
-    base: '/',
-    scope: '/',
+    base: APP_BASE_PATH,
+    scope: APP_BASE_PATH,
     registerType: 'autoUpdate',
     includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
     manifest: {
@@ -78,8 +80,8 @@ const staticWebBuildPlugins: PluginOption[] = [
       theme_color: '#1c1c1e',
       background_color: '#1c1c1e',
       display: 'standalone',
-      scope: '/',
-      start_url: '/',
+      scope: APP_BASE_PATH,
+      start_url: APP_BASE_PATH,
       icons: [
         {
           src: 'android-chrome-192x192.png',
@@ -176,7 +178,7 @@ const BUILD_FOR_SERVER_SERVE = process.env.BUILD_FOR_SERVER_SERVE === '1'
 // https://vitejs.dev/config/
 export default defineConfig(() => {
   return {
-    base: BUILD_FOR_SERVER_SERVE ? '/static/web/' : '/',
+    base: BUILD_FOR_SERVER_SERVE ? '/static/web/' : APP_BASE_PATH,
     assetsInclude: ['**/*.wasm'],
     build: {
       rollupOptions: BUILD_FOR_SERVER_SERVE
@@ -226,6 +228,7 @@ export default defineConfig(() => {
     define: {
       APP_DEV_CWD: JSON.stringify(process.cwd()),
       APP_NAME: JSON.stringify(PKG.name),
+      APP_BASE_PATH: JSON.stringify(APP_BASE_PATH),
       BUILT_DATE: JSON.stringify(new Date().toLocaleDateString()),
       GIT_COMMIT_HASH: JSON.stringify(getGitHash()),
     },
