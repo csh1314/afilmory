@@ -7,9 +7,9 @@ import { env } from './env.js'
 
 export default defineBuilderConfig(() => ({
   storage: {
-    // 照片来自私有仓库 csh1314/afilmory-photos，构建前复制到 apps/web/public/photos（见 scripts/sync-photos.sh）
+    // 原图来自私有仓库 csh1314/afilmory-photos 的 photos/ 目录，由服务器直接提供，不打进构建产物
     provider: 'local',
-    basePath: './apps/web/public/photos',
+    basePath: process.env.PHOTOS_DIR || '../afilmory-photos/photos',
     baseUrl: '/photos',
   },
   system: {
