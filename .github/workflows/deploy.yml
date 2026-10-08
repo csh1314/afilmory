@@ -51,7 +51,7 @@ jobs:
           key: photos-manifest-${{ github.run_id }}
           restore-keys: photos-manifest-
 
-      - run: sh scripts/sync-photos.sh .photos-src
+      - run: bash scripts/sync-photos.sh .photos-src
 
       # 先跑 builder 生成 manifest/缩略图，再 vite build
       - run: pnpm --filter web build

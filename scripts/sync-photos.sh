@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 把照片仓库同步到 apps/web/public/photos，供 builder（local provider）处理并随站点发布
-# 用法：sh scripts/sync-photos.sh [照片仓库目录]，默认 ../afilmory-photos
+# 用法：bash scripts/sync-photos.sh [照片仓库目录]，默认 ../afilmory-photos
 set -euo pipefail
 
 SRC="${1:-../afilmory-photos}"
