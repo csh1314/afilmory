@@ -3,6 +3,7 @@ import * as AvatarPrimitive from '@radix-ui/react-avatar'
 import { siteConfig } from '~/config'
 import { usePhotos } from '~/hooks/usePhotoViewer'
 
+import { LibraryUpdatedAt } from './LibraryUpdatedAt'
 import { resolveSocialUrl, SocialIconButton } from './utils'
 
 export const PageHeaderLeft = () => {
@@ -41,6 +42,7 @@ export const PageHeaderLeft = () => {
       <div className="flex items-center gap-1.5">
         <h1 className="truncate text-sm font-semibold text-white lg:text-base">{siteConfig.name}</h1>
         <span className="text-xs text-white/40 lg:text-sm">{visiblePhotoCount}</span>
+        <LibraryUpdatedAt />
       </div>
       {(githubUrl || twitterUrl || hasRss) && (
         <div className="ml-1 hidden items-center gap-1 border-l border-white/10 pl-2 lg:flex">

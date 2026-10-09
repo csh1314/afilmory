@@ -368,6 +368,7 @@
   "gallery.photos_one": "{{count}} 张照片",
   "gallery.photos_other": "{{count}} 张照片",
   "gallery.search": "搜索",
+  "gallery.updated.at": "图片库更新于 {{time}}",
   "gallery.view.grid": "网格视图",
   "gallery.view.list": "列表视图",
   "gallery.view.map": "地图视图",

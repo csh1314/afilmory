@@ -337,6 +337,7 @@
   "gallery.photos_one": "{{count}} 張照片",
   "gallery.photos_other": "{{count}} 張照片",
   "gallery.search": "搜尋",
+  "gallery.updated.at": "圖片庫更新於 {{time}}",
   "gallery.view.grid": "網格檢視",
   "gallery.view.list": "清單檢視",
   "gallery.view.map": "地圖檢視",

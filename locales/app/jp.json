@@ -337,6 +337,7 @@
   "gallery.photos_one": "写真{{count}}枚",
   "gallery.photos_other": "写真{{count}}枚",
   "gallery.search": "検索",
+  "gallery.updated.at": "ライブラリ更新：{{time}}",
   "gallery.view.grid": "グリッド表示",
   "gallery.view.list": "リスト表示",
   "gallery.view.map": "マップ表示",

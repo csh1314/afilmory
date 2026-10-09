@@ -337,6 +337,7 @@
   "gallery.photos_one": "사진 {{count}}장",
   "gallery.photos_other": "사진 {{count}}장",
   "gallery.search": "검색",
+  "gallery.updated.at": "라이브러리 업데이트: {{time}}",
   "gallery.view.grid": "그리드 보기",
   "gallery.view.list": "목록 보기",
   "gallery.view.map": "지도 보기",

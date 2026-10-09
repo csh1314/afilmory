@@ -368,6 +368,7 @@
   "gallery.photos_one": "{{count}} photo",
   "gallery.photos_other": "{{count}} photos",
   "gallery.search": "Search",
+  "gallery.updated.at": "Library updated {{time}}",
   "gallery.view.grid": "Grid View",
   "gallery.view.list": "List View",
   "gallery.view.map": "Map View",

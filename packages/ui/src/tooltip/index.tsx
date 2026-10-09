@@ -60,6 +60,6 @@ const TooltipContent = ({
 )
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
-export { Tooltip, TooltipContent, TooltipRoot, TooltipTrigger }
+export { Tooltip, TooltipContent, TooltipProvider, TooltipRoot, TooltipTrigger }
 
 export { RootPortal as TooltipPortal } from '../portal'
