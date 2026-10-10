@@ -25,6 +25,7 @@ import { createFeedSitemapPlugin } from './plugins/vite/feed-sitemap'
 import { localesJsonPlugin } from './plugins/vite/locales-json'
 import { manifestInjectPlugin } from './plugins/vite/manifest-inject'
 import { ogImagePlugin } from './plugins/vite/og-image-plugin'
+import { createPhotoPagesPlugin } from './plugins/vite/photo-pages'
 import { photosStaticPlugin } from './plugins/vite/photos-static'
 import { siteConfigInjectPlugin } from './plugins/vite/site-config-inject'
 import { vibeloftTelemetryPlugin } from './plugins/vite/vibeloft-telemetry'
@@ -153,6 +154,7 @@ const staticWebBuildPlugins: PluginOption[] = [
     siteUrl: siteConfig.url,
   }),
   createFeedSitemapPlugin(siteConfig),
+  createPhotoPagesPlugin(siteConfig),
   createHtmlPlugin({
     minify: {
       collapseWhitespace: true,

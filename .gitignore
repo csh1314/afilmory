@@ -19,6 +19,7 @@ apps/web/src/data/photos-manifest.json
 .claude
 
 apps/web/public/thumbnails
+apps/web/public/og
 apps/web/public/photos
 apps/web/public/originals
 

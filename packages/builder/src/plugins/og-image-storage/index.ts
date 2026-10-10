@@ -1,8 +1,7 @@
-import { readFile, stat } from 'node:fs/promises'
+import { Buffer } from 'node:buffer'
+import { readFile } from 'node:fs/promises'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 
-import type { ExifInfo } from '@afilmory/og-renderer'
 import { renderOgImage } from '@afilmory/og-renderer'
 import type { PhotoManifestItem } from '@afilmory/typing'
 import type { SatoriOptions } from 'satori'
@@ -14,13 +13,10 @@ import type { S3CompatibleConfig, StorageConfig } from '../../storage/interfaces
 import type { ThumbnailPluginData } from '../thumbnail-storage/shared.js'
 import { THUMBNAIL_PLUGIN_DATA_KEY } from '../thumbnail-storage/shared.js'
 import type { BuilderPlugin } from '../types.js'
+import { buildExifInfo, formatDate, getPhotoDimensions, loadOgFonts, repoRoot } from './shared.js'
 import type { CloudflareMiddlewareVendorConfig } from './vendors/cloudflare-moddleware.js'
 import { CloudflareMiddlewareVendor } from './vendors/cloudflare-moddleware.js'
 import type { OgVendor } from './vendors/types'
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const repoRoot = path.resolve(__dirname, '../../../../..')
-const ogAssetsDir = path.join(repoRoot, 'be/apps/core/src/modules/content/og/assets')
 
 const PLUGIN_NAME = 'afilmory:og-image'
 const RUN_STATE_KEY = 'state'
@@ -72,20 +68,24 @@ function normalizeDirectory(directory: string | undefined): string {
 }
 
 function trimSlashes(value: string | undefined | null): string | null {
-  if (!value) return null
+  if (!value) {
+    return null
+  }
   const normalized = value.replaceAll('\\', '/').replaceAll(/^\/+|\/+$/g, '')
   return normalized.length > 0 ? normalized : null
 }
 
 function joinSegments(...segments: Array<string | null | undefined>): string {
   const filtered = segments
-    .map((segment) => (segment ?? '').replaceAll('\\', '/').replaceAll(/^\/+|\/+$/g, ''))
-    .filter((segment) => segment.length > 0)
+    .map(segment => (segment ?? '').replaceAll('\\', '/').replaceAll(/^\/+|\/+$/g, ''))
+    .filter(segment => segment.length > 0)
   return filtered.join('/')
 }
 
 function resolveSiteConfigPath(siteConfigPath: string | undefined): string {
-  if (!siteConfigPath) return path.resolve(repoRoot, 'config.json')
+  if (!siteConfigPath) {
+    return path.resolve(repoRoot, 'config.json')
+  }
   return path.isAbsolute(siteConfigPath) ? siteConfigPath : path.resolve(repoRoot, siteConfigPath)
 }
 
@@ -119,51 +119,6 @@ function getOrCreateRunState(container: Map<string, unknown>): PluginRunState {
   return state
 }
 
-async function loadFontFile(fileName: string): Promise<Buffer | null> {
-  const candidates = [
-    path.join(ogAssetsDir, fileName),
-    path.join(repoRoot, 'apps/core/src/modules/content/og/assets', fileName),
-    path.join(repoRoot, 'core/src/modules/content/og/assets', fileName),
-  ]
-
-  for (const candidate of candidates) {
-    const stats = await stat(candidate).catch(() => null)
-    if (stats?.isFile()) {
-      return await readFile(candidate)
-    }
-  }
-
-  return null
-}
-
-/**
- * Load required fonts for Satori/resvg. Missing fonts cause the plugin to skip rendering.
- */
-async function loadFonts(logger: Logger): Promise<SatoriOptions['fonts'] | null> {
-  const geist = await loadFontFile('Geist-Medium.ttf')
-  const harmony = await loadFontFile('HarmonyOS_Sans_SC_Medium.ttf')
-
-  if (!geist || !harmony) {
-    logger.main.warn('OG image plugin: fonts not found, skip rendering for this run.')
-    return null
-  }
-
-  return [
-    {
-      name: 'Geist',
-      data: geist,
-      style: 'normal',
-      weight: 400,
-    },
-    {
-      name: 'HarmonyOS Sans SC',
-      data: harmony,
-      style: 'normal',
-      weight: 400,
-    },
-  ]
-}
-
 /**
  * Resolve site branding from a JSON config file, with sane fallbacks when the file is absent.
  */
@@ -177,13 +132,14 @@ async function loadSiteMeta(options: OgImagePluginOptions, logger: Logger): Prom
 
   try {
     const raw = await readFile(siteConfigPath, 'utf8')
-    const parsed = JSON.parse(raw) as Partial<{ name: string; title: string; accentColor: string }>
+    const parsed = JSON.parse(raw) as Partial<{ name: string, title: string, accentColor: string }>
 
     return {
       siteName: parsed.name?.trim() || parsed.title?.trim() || fallback.siteName,
       accentColor: parsed.accentColor?.trim() || fallback.accentColor,
     }
-  } catch (error) {
+  }
+  catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     logger.main.info(`OG image plugin: using fallback site meta (${siteConfigPath} not readable: ${message}).`)
     return fallback
@@ -197,8 +153,12 @@ function bufferToDataUrl(buffer: Buffer, contentType: string): string {
 
 function guessContentType(thumbnailUrl: string): string {
   const lowered = thumbnailUrl.toLowerCase()
-  if (lowered.endsWith('.png')) return 'image/png'
-  if (lowered.endsWith('.webp')) return 'image/webp'
+  if (lowered.endsWith('.png')) {
+    return 'image/png'
+  }
+  if (lowered.endsWith('.webp')) {
+    return 'image/webp'
+  }
   return 'image/jpeg'
 }
 
@@ -213,7 +173,9 @@ async function resolveThumbnailDataUrl(
   }
 
   const thumbnailUrl = pluginData?.localUrl || item.thumbnailUrl
-  if (!thumbnailUrl) return null
+  if (!thumbnailUrl) {
+    return null
+  }
 
   const contentType = guessContentType(thumbnailUrl)
 
@@ -224,7 +186,8 @@ async function resolveThumbnailDataUrl(
         const arrayBuffer = await response.arrayBuffer()
         return bufferToDataUrl(Buffer.from(arrayBuffer), response.headers.get('content-type') ?? contentType)
       }
-    } catch (error) {
+    }
+    catch (error) {
       logger.thumbnail?.warn?.(`OG image plugin: failed to fetch remote thumbnail ${thumbnailUrl}`, error)
     }
   }
@@ -235,62 +198,10 @@ async function resolveThumbnailDataUrl(
   try {
     const localBuffer = await readFile(localPath)
     return bufferToDataUrl(localBuffer, contentType)
-  } catch (error) {
+  }
+  catch (error) {
     logger.thumbnail?.debug?.(`OG image plugin: could not read local thumbnail ${localPath}`, error)
     return null
-  }
-}
-
-function formatDate(input?: string | null): string | undefined {
-  if (!input) {
-    return undefined
-  }
-
-  const timestamp = Date.parse(input)
-  if (Number.isNaN(timestamp)) {
-    return undefined
-  }
-
-  return new Date(timestamp).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-}
-
-/**
- * Build a lightweight EXIF summary for display; returns null when nothing meaningful is present.
- */
-function buildExifInfo(photo: PhotoManifestItem): ExifInfo | null {
-  const { exif } = photo
-  if (!exif) {
-    return null
-  }
-
-  const focalLength = exif.FocalLengthIn35mmFormat || exif.FocalLength
-  const aperture = exif.FNumber ? `f/${exif.FNumber}` : null
-  const iso = exif.ISO ?? null
-  const shutterSpeed = exif.ExposureTime ? `${exif.ExposureTime}s` : null
-  const camera =
-    exif.Make && exif.Model ? `${exif.Make.trim()} ${exif.Model.trim()}`.trim() : (exif.Model ?? exif.Make ?? null)
-
-  if (!focalLength && !aperture && !iso && !shutterSpeed && !camera) {
-    return null
-  }
-
-  return {
-    focalLength: focalLength ?? null,
-    aperture,
-    iso,
-    shutterSpeed,
-    camera,
-  }
-}
-
-function getPhotoDimensions(photo: PhotoManifestItem) {
-  return {
-    width: photo.width || 1,
-    height: photo.height || 1,
   }
 }
 
@@ -328,7 +239,8 @@ export default function ogImagePlugin(options: OgImagePluginOptions = {}): Build
         if (options.vendor && !vendor) {
           try {
             vendor = createVendor(options.vendor)
-          } catch (error) {
+          }
+          catch (error) {
             logger.main.error('OG image plugin: failed to initialize vendor config.', error)
             throw error
           }
@@ -376,7 +288,8 @@ export default function ogImagePlugin(options: OgImagePluginOptions = {}): Build
 
         if (!options.storageConfig) {
           builder.getStorageManager().addExcludePrefix(remotePrefix)
-        } else {
+        }
+        else {
           externalStorageManager = new StorageManager(uploadableConfig)
         }
       },
@@ -403,7 +316,10 @@ export default function ogImagePlugin(options: OgImagePluginOptions = {}): Build
         }
 
         if (!state.fonts) {
-          state.fonts = await loadFonts(logger)
+          state.fonts = await loadOgFonts()
+          if (!state.fonts) {
+            logger.main.warn('OG image plugin: fonts not found, skip rendering for this run.')
+          }
         }
 
         const { fonts } = state
@@ -420,7 +336,8 @@ export default function ogImagePlugin(options: OgImagePluginOptions = {}): Build
             const remoteUrl = await storageManager.generatePublicUrl(remoteKey)
             state.urlCache.set(remoteKey, remoteUrl)
             item.ogImageUrl = remoteUrl
-          } catch (error) {
+          }
+          catch (error) {
             logger.main.info(`OG image plugin: skipped rendering and could not resolve URL for ${remoteKey}.`, error)
           }
           return
@@ -448,16 +365,17 @@ export default function ogImagePlugin(options: OgImagePluginOptions = {}): Build
 
           const stateForUpload = state
           if (
-            !stateForUpload.uploaded.has(remoteKey) ||
-            payload.options.isForceMode ||
-            payload.options.isForceManifest
+            !stateForUpload.uploaded.has(remoteKey)
+            || payload.options.isForceMode
+            || payload.options.isForceManifest
           ) {
             try {
               await storageManager.uploadFile(remoteKey, Buffer.from(png), {
                 contentType: resolved.contentType,
               })
               stateForUpload.uploaded.add(remoteKey)
-            } catch (error) {
+            }
+            catch (error) {
               logger.main.error(`OG image plugin: failed to upload ${remoteKey}`, error)
               return
             }
@@ -468,23 +386,28 @@ export default function ogImagePlugin(options: OgImagePluginOptions = {}): Build
             try {
               remoteUrl = await storageManager.generatePublicUrl(remoteKey)
               stateForUpload.urlCache.set(remoteKey, remoteUrl)
-            } catch (error) {
+            }
+            catch (error) {
               logger.main.error(`OG image plugin: failed to generate URL for ${remoteKey}`, error)
               return
             }
           }
 
           item.ogImageUrl = remoteUrl
-        } catch (error) {
+        }
+        catch (error) {
           logger.main.error(`OG image plugin: failed to render OG image for ${item.id}`, error)
         }
       },
       afterBuild: async ({ logger }) => {
-        if (!vendor) return
+        if (!vendor) {
+          return
+        }
 
         try {
           await vendor.build({ repoRoot, logger })
-        } catch (error) {
+        }
+        catch (error) {
           logger.main.error('OG image plugin: vendor build step failed.', error)
         }
       },

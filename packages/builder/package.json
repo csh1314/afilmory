@@ -14,6 +14,7 @@
     "bump": "nbump",
     "cli": "tsx src/cli.ts",
     "cluster": "tsx src/cluster/cli.ts",
+    "og:static": "tsx src/og-static.ts",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {

@@ -81,12 +81,13 @@ const ShareSheet: ModalComponent<ShareSheetProps> = ({ photo, blobSrc, dismiss }
   }, [photo.id, resolvedBaseUrl])
 
   const ogPreviewUrl = useMemo(() => {
-    const path = `/og/${photo.id}`
-    if (!resolvedBaseUrl) {
+    // 静态部署时 builder 预生成 OG 图并写入 ogImageUrl；有服务端时走动态 /og/:id
+    const path = photo.ogImageUrl || `/og/${photo.id}`
+    if (/^https?:\/\//.test(path) || !resolvedBaseUrl) {
       return path
     }
     return `${resolvedBaseUrl}${path}`
-  }, [photo.id, resolvedBaseUrl])
+  }, [photo.id, photo.ogImageUrl, resolvedBaseUrl])
 
   const canEmbed = injectConfig.useNext || injectConfig.useCloud
 
